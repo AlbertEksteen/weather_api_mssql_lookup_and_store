@@ -1,14 +1,17 @@
+import configparser
 import pyodbc
 import requests
 import json
 
+config = configparser.ConfigParser()
+config.read('config.ini')
 
-API_KEY = '8WEafSCWiBJA0BKigfIFaKFun4gF4PJz'
-SERVER_NAME = 'Albert-ZBook'
-DATABASE_NAME = 'Weather_Information'
-USERNAME = 'python'
-PASSWORD = 'python1234'
-PORT = '1433'
+API_KEY = config.get('credentials', 'api_key')
+SERVER_NAME = config.get('credentials', 'server_name')
+DATABASE_NAME = config.get('credentials', 'database_name')
+USERNAME = config.get('credentials', 'username')
+PASSWORD = config.get('credentials', 'password')
+PORT = config.get('credentials', 'port')
 
 
 def retrieve_cities_from_database():
@@ -47,7 +50,7 @@ def get_weather_location(latitude, longitude, api_key):
     
     if response.status_code == 200:
         data = response.json()
-        return data['Key'] #data[0]  # Assuming the first item in the response represents the current weather conditions
+        return data['Key']
     else:
         print('API request failed with status code:', response.status_code)
         return None
@@ -62,7 +65,7 @@ def get_current_weather(locationkey, api_key):
     
     if response.status_code == 200:
         data = response.json()
-        return data #data[0]  # Assuming the first item in the response represents the current weather conditions
+        return data #data[0]
     else:
         print('API request failed with status code:', response.status_code)
         return None
